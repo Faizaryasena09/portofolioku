@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:portofolio": "node dist/portofolio/server/server.mjs"
+    "serve:ssr:portofolio": "node dist/portofolio/server/server.mjs",
+    "vercel-build": "npm install --legacy-peer-deps && ng build --configuration production"
   },
   "private": true,
   "dependencies": {
@@ -45,3 +46,4 @@
     "typescript": "~5.5.2"
   }
 }
+
