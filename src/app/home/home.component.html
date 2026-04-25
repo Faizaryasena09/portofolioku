@@ -13,22 +13,47 @@
 </div>
 
 <div class="relative z-10 w-full overflow-hidden">
+  <!-- Navigation Header -->
+  <header
+    class="fixed top-0 left-0 right-0 z-[100] backdrop-blur-md bg-slate-950/30 border-b border-white/5 animate-slide-down">
+    <nav class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <div class="text-white font-bold text-xl tracking-tighter hover:scale-105 transition-transform cursor-pointer">
+        ARSENS<span class="text-sky-400">.</span>
+      </div>
+      
+      <ul class="hidden md:flex items-center gap-8">
+        <li><a href="#home" class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Home</a></li>
+        <li><a href="#expertise" class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Expertise</a></li>
+        <li><a href="#tech-stack" class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Tech Stack</a></li>
+        <li><a href="#projects" class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Projects</a></li>
+        <li><a href="#contact" class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Contact</a></li>
+      </ul>
+
+      <div class="flex items-center gap-4">
+        <a href="#contact" 
+           class="px-5 py-2 rounded-full bg-white text-slate-950 text-xs font-bold hover:bg-sky-400 transition-colors duration-300">
+           Let's Talk
+        </a>
+      </div>
+    </nav>
+  </header>
+
   <!-- Hero Section -->
-  <section
+  <section id="home"
     class="min-h-screen flex flex-col md:flex-row justify-center items-center px-6 md:px-20 py-24 gap-10 lg:gap-20 max-w-7xl mx-auto text-center md:text-left">
-    <div class="flex-shrink-0 relative group mt-10 md:mt-0">
+    <div class="flex-shrink-0 relative group mt-10 md:mt-0 reveal">
       <!-- Glow behind image -->
       <div
         class="absolute inset-0 bg-gradient-to-r from-sky-400 to-purple-600 rounded-full blur-2xl opacity-50 group-hover:opacity-100 transition duration-700">
       </div>
       <div
-        class="relative shadow-[0_0_40px_rgba(56,189,248,0.3)] rounded-full border-[4px] border-white/10 overflow-hidden w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 backdrop-blur-sm z-10 mx-auto group-hover:border-white/30 transition duration-500">
+        class="relative shadow-[0_0_40px_rgba(56,189,248,0.3)] rounded-full border-[4px] border-white/10 overflow-hidden w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 backdrop-blur-sm z-10 mx-auto group-hover:border-white/30 transition duration-500 animate-float">
         <img src="myphoto.jpg" alt="Faiz Resta Aryasena"
           class="w-full h-full object-cover transform transition duration-700 group-hover:scale-105" />
       </div>
     </div>
 
-    <div class="max-w-3xl space-y-6">
+    <div class="max-w-3xl space-y-6 reveal delay-200">
       <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight leading-tight text-white drop-shadow-2xl">
         Faiz Resta Aryasena
       </h1>
@@ -44,12 +69,13 @@
           pengguna.
         </p>
       </div>
+
     </div>
   </section>
 
   <!-- Expertise Section -->
-  <section class="py-24 px-6 max-w-7xl mx-auto relative z-20">
-    <div class="text-center mb-16">
+  <section id="expertise" class="py-24 px-6 max-w-7xl mx-auto relative z-20">
+    <div class="text-center mb-16 reveal">
       <h2 class="text-3xl font-bold text-white tracking-widest uppercase mb-4">
         Expertise & Skills
       </h2>
@@ -59,7 +85,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       <!-- Fullstack & Development Card -->
       <div
-        class="group bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/5 shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:bg-white/10">
+        class="group bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/5 shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:bg-white/10 reveal delay-100">
         <div class="w-14 h-14 rounded-2xl bg-sky-500/20 flex items-center justify-center mb-6 text-2xl group-hover:scale-110 transition-transform">
           🚀
         </div>
@@ -86,7 +112,7 @@
 
       <!-- Creative Media Card -->
       <div
-        class="group bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/5 shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:bg-white/10">
+        class="group bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/5 shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:bg-white/10 reveal delay-200">
         <div class="w-14 h-14 rounded-2xl bg-purple-500/20 flex items-center justify-center mb-6 text-2xl group-hover:scale-110 transition-transform">
           🎬
         </div>
@@ -113,7 +139,7 @@
 
       <!-- Visual Arts Card -->
       <div
-        class="group bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/5 shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:bg-white/10">
+        class="group bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/5 shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:bg-white/10 reveal delay-300">
         <div class="w-14 h-14 rounded-2xl bg-pink-500/20 flex items-center justify-center mb-6 text-2xl group-hover:scale-110 transition-transform">
           📸
         </div>
@@ -140,8 +166,218 @@
     </div>
   </section>
 
+  <!-- Tech Stack Section -->
+  <section id="tech-stack" class="py-24 px-6 max-w-7xl mx-auto relative z-20">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl font-bold text-white tracking-widest uppercase mb-4">
+        Tech Stack
+      </h2>
+      <div class="h-1 w-16 bg-gradient-to-r from-sky-400 to-purple-500 mx-auto rounded-full"></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Website Development -->
+      <div class="bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/5 shadow-2xl reveal delay-100">
+        <h3 class="text-xl font-bold mb-8 text-white">Website Development</h3>
+        <div class="grid grid-cols-5 gap-y-8 gap-x-4">
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://cdn.simpleicons.org/nodedotjs/339933" class="w-10 h-10 transition-transform group-hover:scale-110" alt="Node.js">
+            <span class="text-[10px] text-gray-500 font-medium">Node.js</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://cdn.simpleicons.org/react/61DAFB" class="w-10 h-10 transition-transform group-hover:scale-110" alt="React">
+            <span class="text-[10px] text-gray-500 font-medium">React</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://cdn.simpleicons.org/vuedotjs/4FC08D" class="w-10 h-10 transition-transform group-hover:scale-110" alt="Vue">
+            <span class="text-[10px] text-gray-500 font-medium">Vue</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://cdn.simpleicons.org/nextdotjs/white" class="w-10 h-10 transition-transform group-hover:scale-110" alt="Next.js">
+            <span class="text-[10px] text-gray-500 font-medium">Next.js</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://cdn.simpleicons.org/php/777BB4" class="w-10 h-10 transition-transform group-hover:scale-110" alt="PHP">
+            <span class="text-[10px] text-gray-500 font-medium">PHP</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://cdn.simpleicons.org/laravel/FF2D20" class="w-10 h-10 transition-transform group-hover:scale-110" alt="Laravel">
+            <span class="text-[10px] text-gray-500 font-medium">Laravel</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://cdn.simpleicons.org/html5/E34F26" class="w-10 h-10 transition-transform group-hover:scale-110" alt="HTML5">
+            <span class="text-[10px] text-gray-500 font-medium">HTML</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://cdn.simpleicons.org/javascript/F7DF1E" class="w-10 h-10 transition-transform group-hover:scale-110" alt="JavaScript">
+            <span class="text-[10px] text-gray-500 font-medium">JavaScript</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://cdn.simpleicons.org/express/white" class="w-10 h-10 transition-transform group-hover:scale-110" alt="Express">
+            <span class="text-[10px] text-gray-500 font-medium">Express</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://cdn.simpleicons.org/flask/white" class="w-10 h-10 transition-transform group-hover:scale-110" alt="Flask">
+            <span class="text-[10px] text-gray-500 font-medium">Flask</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Database -->
+      <div class="bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/5 shadow-2xl reveal delay-200">
+        <h3 class="text-xl font-bold mb-8 text-white">Database</h3>
+        <div class="grid grid-cols-4 gap-y-8 gap-x-4">
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://cdn.simpleicons.org/mysql/4479A1" class="w-10 h-10 transition-transform group-hover:scale-110" alt="MySQL">
+            <span class="text-[10px] text-gray-500 font-medium">MySQL</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://cdn.simpleicons.org/postgresql/4169E1" class="w-10 h-10 transition-transform group-hover:scale-110" alt="PostgreSQL">
+            <span class="text-[10px] text-gray-500 font-medium">PostgreSQL</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://cdn.simpleicons.org/mongodb/47A248" class="w-10 h-10 transition-transform group-hover:scale-110" alt="MongoDB">
+            <span class="text-[10px] text-gray-500 font-medium">MongoDB</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://cdn.simpleicons.org/supabase/3FCF8E" class="w-10 h-10 transition-transform group-hover:scale-110" alt="Supabase">
+            <span class="text-[10px] text-gray-500 font-medium">Supabase</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://cdn.simpleicons.org/firebase/FFCA28" class="w-10 h-10 transition-transform group-hover:scale-110" alt="Firebase">
+            <span class="text-[10px] text-gray-500 font-medium">Firebase</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://cdn.simpleicons.org/mariadb/003545" class="w-10 h-10 transition-transform group-hover:scale-110" alt="MariaDB">
+            <span class="text-[10px] text-gray-500 font-medium">MariaDB</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI / Machine Learning -->
+      <div class="bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/5 shadow-2xl reveal delay-300">
+        <h3 class="text-xl font-bold mb-8 text-white">Ai / Machine Learning</h3>
+        <div class="grid grid-cols-4 gap-y-8 gap-x-4">
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://cdn.simpleicons.org/python/3776AB" class="w-10 h-10 transition-transform group-hover:scale-110" alt="Python">
+            <span class="text-[10px] text-gray-500 font-medium">Python</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://cdn.simpleicons.org/tensorflow/FF6F00" class="w-10 h-10 transition-transform group-hover:scale-110" alt="Tensorflow">
+            <span class="text-[10px] text-gray-500 font-medium">Tensorflow</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://cdn.simpleicons.org/pytorch/EE4C2C" class="w-10 h-10 transition-transform group-hover:scale-110" alt="PyTorch">
+            <span class="text-[10px] text-gray-500 font-medium">PyTorch</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://cdn.simpleicons.org/langchain/white" class="w-10 h-10 transition-transform group-hover:scale-110" alt="Langchain">
+            <span class="text-[10px] text-gray-500 font-medium">Langchain</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Development -->
+      <div class="bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/5 shadow-2xl reveal delay-100">
+        <h3 class="text-xl font-bold mb-8 text-white">Mobile Development</h3>
+        <div class="grid grid-cols-4 gap-y-8 gap-x-4">
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://cdn.simpleicons.org/flutter/02569B" class="w-10 h-10 transition-transform group-hover:scale-110" alt="Flutter">
+            <span class="text-[10px] text-gray-500 font-medium">Flutter</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://cdn.simpleicons.org/androidstudio/3DDC84" class="w-10 h-10 transition-transform group-hover:scale-110" alt="Android Studio">
+            <span class="text-[10px] text-gray-500 font-medium">Android Studio</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://cdn.simpleicons.org/kotlin/7F52FF" class="w-10 h-10 transition-transform group-hover:scale-110" alt="Kotlin">
+            <span class="text-[10px] text-gray-500 font-medium">Kotlin</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Creative Tools -->
+      <div class="bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/5 shadow-2xl reveal delay-200">
+        <h3 class="text-xl font-bold mb-8 text-white">Creative Tools</h3>
+        <div class="grid grid-cols-4 gap-y-8 gap-x-4">
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://img.icons8.com/color/48/fl-studio.png" class="w-10 h-10 transition-transform group-hover:scale-110" alt="FL Studio">
+            <span class="text-[10px] text-gray-500 font-medium">FL Studio</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://img.icons8.com/color/48/audacity.png" class="w-10 h-10 transition-transform group-hover:scale-110" alt="Audacity">
+            <span class="text-[10px] text-gray-500 font-medium">Audacity</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://img.icons8.com/color/48/studio-one.png" class="w-10 h-10 transition-transform group-hover:scale-110" alt="Studio One">
+            <span class="text-[10px] text-gray-500 font-medium">Studio One</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://img.icons8.com/color/48/steinberg.png" class="w-10 h-10 transition-transform group-hover:scale-110" alt="Cubase">
+            <span class="text-[10px] text-gray-500 font-medium">Cubase</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://img.icons8.com/color/48/adobe-premiere-pro.png" class="w-10 h-10 transition-transform group-hover:scale-110" alt="Premiere Pro">
+            <span class="text-[10px] text-gray-500 font-medium">Premiere</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://img.icons8.com/color/48/adobe-after-effects.png" class="w-10 h-10 transition-transform group-hover:scale-110" alt="After Effects">
+            <span class="text-[10px] text-gray-500 font-medium">After Effects</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://img.icons8.com/color/48/adobe-lightroom.png" class="w-10 h-10 transition-transform group-hover:scale-110" alt="Lightroom">
+            <span class="text-[10px] text-gray-500 font-medium">Lightroom</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://img.icons8.com/color/48/adobe-photoshop.png" class="w-10 h-10 transition-transform group-hover:scale-110" alt="Photoshop">
+            <span class="text-[10px] text-gray-500 font-medium">Photoshop</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Others -->
+      <div class="bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/5 shadow-2xl lg:col-span-3 reveal delay-300">
+        <h3 class="text-xl font-bold mb-8 text-white">Others</h3>
+        <div class="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-9 gap-y-8 gap-x-4">
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://cdn.simpleicons.org/github/white" class="w-10 h-10 transition-transform group-hover:scale-110" alt="Github">
+            <span class="text-[10px] text-gray-500 font-medium">Github</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://cdn.simpleicons.org/gitlab/FC6D26" class="w-10 h-10 transition-transform group-hover:scale-110" alt="Gitlab">
+            <span class="text-[10px] text-gray-500 font-medium">Gitlab</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://cdn.simpleicons.org/figma/F24E1E" class="w-10 h-10 transition-transform group-hover:scale-110" alt="Figma">
+            <span class="text-[10px] text-gray-500 font-medium">Figma</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://cdn.simpleicons.org/docker/2496ED" class="w-10 h-10 transition-transform group-hover:scale-110" alt="Docker">
+            <span class="text-[10px] text-gray-500 font-medium">Docker</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://cdn.simpleicons.org/jenkins/D24939" class="w-10 h-10 transition-transform group-hover:scale-110" alt="Jenkins">
+            <span class="text-[10px] text-gray-500 font-medium">Jenkins</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://cdn.simpleicons.org/cloudflare/F38020" class="w-10 h-10 transition-transform group-hover:scale-110" alt="Cloudflare">
+            <span class="text-[10px] text-gray-500 font-medium">Cloudflare</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://cdn.simpleicons.org/postman/FF6C37" class="w-10 h-10 transition-transform group-hover:scale-110" alt="Postman">
+            <span class="text-[10px] text-gray-500 font-medium">Postman</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 group text-center">
+            <img src="https://cdn.simpleicons.org/dbeaver/382923" class="w-10 h-10 transition-transform group-hover:scale-110" alt="DBeaver">
+            <span class="text-[10px] text-gray-500 font-medium">DBeaver</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Projects Section -->
-  <section class="max-w-7xl mx-auto px-6 py-24 relative z-20">
+  <section id="projects" class="max-w-7xl mx-auto px-6 py-24 relative z-20">
     <div class="text-center mb-20">
       <h2 class="text-3xl font-bold text-white tracking-widest uppercase mb-4">
         Selected Works
@@ -151,7 +387,7 @@
 
     <div class="grid gap-8 lg:grid-cols-2 mb-8">
       <!-- Arvolution Project -->
-      <a href="https://arvolution.id" target="_blank" class="block group">
+      <a href="https://arvolution.id" target="_blank" class="block group reveal delay-100">
         <div
           class="bg-white/5 backdrop-blur-xl rounded-3xl overflow-hidden border border-white/5 hover:border-white/20 hover:shadow-2xl transition-all duration-500 h-full flex flex-col">
           <div class="relative h-80 w-full overflow-hidden">
@@ -179,7 +415,7 @@
       </a>
 
       <!-- Rushless Exam Project -->
-      <a href="https://tesrush.kodealab.web.id" target="_blank" class="block group">
+      <a href="https://tesrush.kodealab.web.id" target="_blank" class="block group reveal delay-200">
         <div
           class="bg-white/5 backdrop-blur-xl rounded-3xl overflow-hidden border border-white/5 hover:border-white/20 hover:shadow-2xl transition-all duration-500 h-full flex flex-col">
           <div class="relative h-80 w-full overflow-hidden">
@@ -239,6 +475,23 @@
         </div>
       </a>
     </div>
+
+    <!-- Kodealab CTA Banner -->
+    <div
+      class="mt-20 bg-gradient-to-r from-sky-500/10 to-purple-600/10 backdrop-blur-xl rounded-3xl p-8 md:p-12 border border-white/10 flex flex-col md:flex-row items-center justify-between gap-8 group">
+      <div>
+        <h3 class="text-2xl md:text-3xl font-bold text-white mb-2">Interest with Kodealab?</h3>
+        <p class="text-gray-400 font-light">Mari kunjungi software house kami untuk mewujudkan ide digital Anda.</p>
+      </div>
+      <a href="https://kodea-lab.netlify.app/" target="_blank"
+        class="flex items-center gap-3 px-8 py-4 bg-white text-slate-950 font-bold rounded-full transition-all duration-300 hover:scale-105 active:scale-95 shadow-xl hover:shadow-sky-500/20">
+        Mari kunjungi
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform group-hover:translate-x-1 transition-transform"
+          fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+      </a>
+    </div>
   </section>
 
   <!-- Visuals Gallery Section -->
@@ -269,7 +522,7 @@
   </section>
 
   <!-- Connect Section -->
-  <section class="py-24 relative overflow-hidden z-20">
+  <section id="contact" class="py-24 relative overflow-hidden z-20 reveal">
     <div class="max-w-4xl mx-auto px-6 text-center">
       <h2 class="text-3xl md:text-5xl font-bold mb-6 text-white tracking-tight">Let's Create Together</h2>
 
