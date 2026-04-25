@@ -11,13 +11,12 @@ import { CommonModule } from '@angular/common';
 export class HomeComponent {
   galleries = [
     {
-      title: 'Galeri',
+      title: 'Photography & Visuals',
       photos: [
         'https://imgur.com/fc3mYxP.jpg',
         'https://imgur.com/wBKAkPZ.jpg',
         'https://imgur.com/ra3wS0Z.jpg',
         'https://imgur.com/l9bGiOX.jpg',
-        'https://imgur.com/8OS5Dwg.jpg',
         'https://imgur.com/8OS5Dwg.jpg',
         'https://imgur.com/Xr7Mzav.jpg',
         'https://imgur.com/0q7H1zB.jpg',
@@ -29,14 +28,6 @@ export class HomeComponent {
         'https://imgur.com/TzG4Eww.jpg',
         'https://imgur.com/qCSvfUK.jpg'
       ]
-    },
-    {
-      title: 'Desain grafis',
-      photos: [
-        'https://imgur.com/w03A7OL.jpg',
-        'https://imgur.com/NYa8lHV.jpg',
-        'https://imgur.com/9gxscr7.jpg'
-      ]
-    },
+    }
   ];
 }
