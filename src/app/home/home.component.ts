@@ -25,15 +25,27 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   galleries = [{
     title: 'Photography & Visuals',
     photos: [
-      'https://imgur.com/fc3mYxP.jpg','https://imgur.com/wBKAkPZ.jpg',
-      'https://imgur.com/ra3wS0Z.jpg','https://imgur.com/l9bGiOX.jpg',
-      'https://imgur.com/8OS5Dwg.jpg','https://imgur.com/Xr7Mzav.jpg',
-      'https://imgur.com/0q7H1zB.jpg','https://imgur.com/P38eyA7.jpg',
-      'https://imgur.com/dtq9fya.jpg','https://imgur.com/wfop4XG.jpg',
-      'https://imgur.com/ZqMkeiK.jpg','https://imgur.com/biAXpSX.jpg',
-      'https://imgur.com/TzG4Eww.jpg','https://imgur.com/qCSvfUK.jpg'
+      { url: 'https://imgur.com/fc3mYxP.jpg', title: 'Moody Skies', category: 'Photography / Landscape' },
+      { url: 'https://imgur.com/wBKAkPZ.jpg', title: 'Verdant Fields', category: 'Nature / Greenery' },
+      { url: 'https://imgur.com/ra3wS0Z.jpg', title: 'Urban Explorations', category: 'Street / Architectural' },
+      { url: 'https://imgur.com/l9bGiOX.jpg', title: 'Silent Forest', category: 'Nature / Wildlife' },
+      { url: 'https://imgur.com/8OS5Dwg.jpg', title: 'Warm Solitude', category: 'Visual Art / Conceptual' },
+      { url: 'https://imgur.com/Xr7Mzav.jpg', title: 'Emerald Meadows', category: 'Landscape / Outdoor' },
+      { url: 'https://imgur.com/0q7H1zB.jpg', title: 'Retro Nights', category: 'Street / Cinematography' },
+      { url: 'https://imgur.com/P38eyA7.jpg', title: 'Group Assembly', category: 'Street / Editorial' },
+      { url: 'https://imgur.com/dtq9fya.jpg', title: 'Quiet Corners', category: 'Street / Urban' },
+      { url: 'https://imgur.com/wfop4XG.jpg', title: 'Summer Breeze', category: 'Nature / Sky' },
+      { url: 'https://imgur.com/ZqMkeiK.jpg', title: 'Golden Hour', category: 'Landscape / Sun' },
+      { url: 'https://imgur.com/biAXpSX.jpg', title: 'Rotiboy Bistro', category: 'Commercial / Street' },
+      { url: 'https://imgur.com/TzG4Eww.jpg', title: 'Mist & Shadows', category: 'Atmospheric / Moody' },
+      { url: 'https://imgur.com/qCSvfUK.jpg', title: 'Infinite Green', category: 'Nature / Landscape' }
     ]
   }];
+
+  activePhotoIndex = 0;
+  currentFormattedTime = '';
+  currentFormattedDate = '';
+  private clockIntervalId: any;
 
   scrollToTop() {
     if (isPlatformBrowser(this.platformId)) window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -42,6 +54,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   ngOnDestroy() {
     if (isPlatformBrowser(this.platformId)) {
       if (this.rafId) cancelAnimationFrame(this.rafId);
+      if (this.clockIntervalId) clearInterval(this.clockIntervalId);
       this.listeners.forEach(({ t, e, h, o }) => t.removeEventListener(e, h, o));
       document.querySelector('.particle-field')?.remove();
     }
@@ -54,9 +67,27 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     if (!isPlatformBrowser(this.platformId)) return;
+    this.initClock();
     this.initParticles();
     this.initTiltCards();
     this.initScrollEngine();
+  }
+
+  private initClock() {
+    const updateTime = () => {
+      const now = new Date();
+      let hours = now.getHours();
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours ? hours : 12;
+      this.currentFormattedTime = `${hours}:${minutes} ${ampm} [WIB]`;
+      
+      const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', year: 'numeric' };
+      this.currentFormattedDate = now.toLocaleDateString('en-US', options).toUpperCase();
+    };
+    updateTime();
+    this.clockIntervalId = setInterval(updateTime, 1000);
   }
 
   // ─── SCROLL ENGINE ──────────────────────────────────────────────
@@ -76,18 +107,13 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     const marquee1        = document.getElementById('marquee-1');
     const marquee2        = document.getElementById('marquee-2');
 
-    // ── Scatter systems: each section has elements that scatter/assemble (desktop only) ──
-    const isMobileInit = window.innerWidth < 768;
-    const scatterGroups = isMobileInit ? [] : this.buildScatterGroups();
+    // ── Scatter systems: each section has elements that scatter/assemble (all devices) ──
+    let scatterGroups = this.buildScatterGroups();
 
-    // On mobile: immediately show all scatter-items (skip JS-driven animation entirely)
-    if (isMobileInit) {
-      document.querySelectorAll<HTMLElement>('.scatter-item').forEach(el => {
-        el.style.opacity = '1';
-        el.style.transform = '';
-        el.classList.add('reveal-active');
-      });
-    }
+    this.on(window, 'resize', () => {
+      scatterGroups = this.buildScatterGroups();
+      handleScroll();
+    }, { passive: true });
 
     // ── Section hidden-until-visible (non-scatter sections like gallery) ──
     const revealObserver = new IntersectionObserver((entries) => {
@@ -183,30 +209,182 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
         }
       }
 
-      // ── Desktop-only: parallax, scatter, marquee skew, image parallax ──
-      if (!isMobile) {
-        // Background blobs parallax
-        parallaxBlobs.forEach(b => {
-          const speed = parseFloat(b.dataset['speed'] || '0.1');
-          b.style.transform = `translateY(${scrollY * speed}px)`;
-        });
+      // ── Parallax and skew effects (all devices) ──
+      parallaxBlobs.forEach(b => {
+        const speed = parseFloat(b.dataset['speed'] || '0.1');
+        b.style.transform = `translateY(${scrollY * speed}px)`;
+      });
 
-        // Marquee skew from velocity
-        const skew = Math.max(-3, Math.min(3, velocity * 0.15));
-        if (marquee1) marquee1.style.transform = `skewY(${skew * 0.4}deg)`;
-        if (marquee2) marquee2.style.transform = `skewY(${-skew * 0.4}deg)`;
+      const skew = Math.max(-3, Math.min(3, velocity * 0.15));
+      if (marquee1) marquee1.style.transform = `skewY(${skew * 0.4}deg)`;
+      if (marquee2) marquee2.style.transform = `skewY(${-skew * 0.4}deg)`;
 
-        // ── SCATTER / ASSEMBLE each section ──
-        scatterGroups.forEach(group => this.updateScatterGroup(group, H));
+      // ── Scatter / Assemble each section (all devices) ──
+      scatterGroups.forEach(group => this.updateScatterGroup(group, H));
 
-        // ── Project image inner parallax ──
-        document.querySelectorAll<HTMLElement>('.img-parallax-inner').forEach(img => {
-          const wrap = img.parentElement;
-          if (!wrap) return;
-          const rect = wrap.getBoundingClientRect();
-          const rel = (rect.top / H - 0.5);
-          img.style.transform = `scale(1.15) translateY(${rel * 28}px)`;
-        });
+      // ── Project image inner parallax & text details parallax (all devices, responsive travel) ──
+      const imgTravelDist = isMobile ? 35 : 55;
+      const textTravelDist = isMobile ? 12 : 24;
+
+      document.querySelectorAll<HTMLElement>('.img-parallax-inner').forEach(img => {
+        const wrap = img.parentElement;
+        if (!wrap) return;
+        const rect = wrap.getBoundingClientRect();
+        const rel = (rect.top / H - 0.5);
+        img.style.setProperty('--parallax-y', `${-rel * imgTravelDist}px`);
+      });
+
+      document.querySelectorAll<HTMLElement>('.img-parallax-text').forEach(text => {
+        const wrap = text.closest('.scatter-item');
+        if (!wrap) return;
+        const rect = wrap.getBoundingClientRect();
+        const rel = (rect.top / H - 0.5);
+        text.style.transform = `translate3d(0, ${-rel * textTravelDist}px, 0)`;
+      });
+
+      // ── Space-Tech Projects Parallax (Selected Works) ──
+      document.querySelectorAll<HTMLElement>('.project-parallax-item').forEach(item => {
+        const parent = item.parentElement;
+        if (!parent) return;
+        const parentRect = parent.getBoundingClientRect();
+        if (parentRect.bottom >= 0 && parentRect.top <= H) {
+          const parentCenter = parentRect.top + parentRect.height / 2;
+          const centerDiff = parentCenter - (H / 2);
+          const speed = parseFloat(item.dataset['speed'] || '0');
+          
+          // Calculate entrance & exit opacity fade based on distance from viewport center
+          const distFromCenter = Math.abs(centerDiff);
+          const fadeStart = H * 0.35; // Fully visible within 35% of center
+          const fadeEnd = H * 0.65;   // Fully faded out when beyond 65% of center
+          
+          let opacity = 1;
+          if (distFromCenter > fadeStart) {
+            const ratio = (distFromCenter - fadeStart) / (fadeEnd - fadeStart);
+            opacity = Math.max(0, 1 - ratio);
+          }
+          
+          item.style.opacity = String(opacity);
+          
+          if (speed !== 0) {
+            // Apply a premium, noticeable parallax scroll travel
+            const baseMultiplier = 3.5;
+            const activeSpeed = isMobile ? speed * 0.3 * baseMultiplier : speed * baseMultiplier;
+            const translateY = centerDiff * activeSpeed;
+            
+            // Subtle scale-up from 0.95 (far) to 1.0 (centered) matching the fade opacity
+            const scale = 0.95 + 0.05 * opacity;
+            item.style.transform = `translate3d(0, ${translateY}px, 0) scale(${scale})`;
+          } else {
+            item.style.transform = `scale(${0.95 + 0.05 * opacity})`;
+          }
+        } else {
+          item.style.opacity = '0';
+          item.style.transform = 'scale(0.95)';
+        }
+      });
+
+      // ── Jordan Gilroy Pinned Slider activeIndex & Float Tracking (Gallery) ──
+      const gallerySec = document.getElementById('visuals-gallery');
+      if (gallerySec) {
+        const rect = gallerySec.getBoundingClientRect();
+        const totalScrollDist = rect.height - H;
+        if (totalScrollDist > 0) {
+          const progress = Math.max(0, Math.min(1, -rect.top / totalScrollDist));
+          const photoCount = this.galleries[0].photos.length;
+          
+          // Calculate active index
+          const activeIndex = Math.min(photoCount - 1, Math.floor(progress * photoCount));
+          if (this.activePhotoIndex !== activeIndex) {
+            this.activePhotoIndex = activeIndex;
+          }
+
+          // Desktop-only smooth inner photo floating scroll parallax (using high-performance CSS custom properties)
+          if (!isMobile) {
+            const indexProgress = (progress * photoCount) % 1.0;
+            const yOffset = (indexProgress - 0.5) * -35;
+            gallerySec.style.setProperty('--gallery-float-y', `${yOffset}px`);
+          }
+        }
+      }
+
+      // ── Connect/Contact Section Sticky Parallax Pinning (Desktop only) ──
+      const contactWrapper = document.getElementById('contact-pin-wrapper');
+      const contactSec = document.getElementById('contact');
+      if (contactWrapper && contactSec) {
+        if (isMobile) {
+          // Reset styling on mobile
+          contactSec.style.position = '';
+          contactSec.style.top = '';
+          contactSec.style.height = '';
+          
+          const header = contactSec.querySelector<HTMLElement>('.contact-header');
+          if (header) {
+            header.style.opacity = '';
+            header.style.transform = '';
+          }
+          const card = contactSec.querySelector<HTMLElement>('.contact-card');
+          if (card) {
+            card.style.opacity = '';
+            card.style.transform = '';
+          }
+          const buttons = contactSec.querySelectorAll<HTMLElement>('.contact-pill');
+          buttons.forEach(btn => {
+            btn.style.opacity = '';
+            btn.style.transform = '';
+          });
+        } else {
+          // Sticky/pin on desktop
+          contactSec.style.position = 'sticky';
+          contactSec.style.top = '0';
+          contactSec.style.height = '100vh';
+
+          const rect = contactWrapper.getBoundingClientRect();
+          const totalDist = rect.height - H;
+          if (totalDist > 0) {
+            const pinRatio = Math.max(0, Math.min(1, -rect.top / totalDist));
+            
+            // Entry phase: 0.0 -> 0.3
+            // Hold/Dwell phase: 0.3 -> 0.7
+            // Exit phase: 0.7 -> 1.0
+            let progress = 0;
+            if (pinRatio < 0.3) {
+              // Fade in
+              progress = this.easeInOut(pinRatio / 0.3);
+            } else if (pinRatio <= 0.7) {
+              // Fully visible
+              progress = 1.0;
+            } else {
+              // Fade out
+              progress = this.easeInOut((1.0 - pinRatio) / 0.3);
+            }
+
+            // Apply animation progress
+            // 1. Header
+            const header = contactSec.querySelector<HTMLElement>('.contact-header');
+            if (header) {
+              header.style.opacity = String(progress);
+              header.style.transform = `translate3d(0, ${(1 - progress) * -30}px, 0)`;
+            }
+
+            // 2. Glassmorphic Card
+            const card = contactSec.querySelector<HTMLElement>('.contact-card');
+            if (card) {
+              card.style.opacity = String(progress);
+              const scale = 0.92 + 0.08 * progress;
+              const translateY = (1 - progress) * 50;
+              card.style.transform = `translate3d(0, ${translateY}px, 0) scale(${scale})`;
+            }
+
+            // 3. Staggered Social Buttons
+            const buttons = contactSec.querySelectorAll<HTMLElement>('.contact-pill');
+            buttons.forEach((btn, idx) => {
+              const btnStagger = Math.max(0, Math.min(1, (progress - idx * 0.12) / 0.64));
+              const btnProgress = this.easeOut(btnStagger);
+              btn.style.opacity = String(btnProgress);
+              btn.style.transform = `translate3d(0, ${(1 - btnProgress) * 25}px, 0)`;
+            });
+          }
+        }
       }
 
       ticking = false;
@@ -289,8 +467,8 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
         
         const dist = sectionMag * distMult;
         // Project cards slide vertically only (no horizontal skew/overlapping on desktop)
-        const tx = isProjects ? 0 : Math.cos(angle * Math.PI / 180) * dist;
-        const ty = isProjects ? dist : Math.sin(angle * Math.PI / 180) * dist * (isStats ? 0.85 : (isTechStack ? 0.85 : (isExpertise ? 0.65 : 0.5)));
+        let tx = isProjects ? 0 : Math.cos(angle * Math.PI / 180) * dist;
+        let ty = isProjects ? dist : Math.sin(angle * Math.PI / 180) * dist * (isStats ? 0.85 : (isTechStack ? 0.85 : (isExpertise ? 0.65 : 0.5)));
         
         let tz = 0;
         if (isStats) {
@@ -304,7 +482,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
         }
 
         // Slight rotation tilt:
-        const tr = isProjects ? (i % 2 === 0 ? 1 : -1) * (3 + (i % 3) * 2) : (i % 2 === 0 ? 1 : -1) * ((i * 23) % sectionRotMag + 15);
+        let tr = isProjects ? (i % 2 === 0 ? 1 : -1) * (3 + (i % 3) * 2) : (i % 2 === 0 ? 1 : -1) * ((i * 23) % sectionRotMag + 15);
         
         let ts = 1;
         if (isStats) {
@@ -317,6 +495,15 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
           ts = 0.92; // Slight zoom in from 0.92 to 1.0 for premium finish
         } else {
           ts = 0.72 + (i % 3) * 0.08;
+        }
+
+        // Scale down mobile transformations to prevent viewport overflow and visual chaos
+        if (isMobile) {
+          tx = tx * 0.15; // Limit horizontal translation to prevent horizontal scrolling
+          ty = ty * 0.40; // Limit vertical translation to keep within the container bounds
+          tz = tz * 0.40; // Limit 3D depth translation
+          tr = tr * 0.35; // Limit rotation to prevent clipping and text overlap
+          ts = 0.82 + (ts - 0.82) * 0.5; // Bring start scale closer to 1.0 (prevents items disappearing)
         }
 
         items.push({ el, tx, ty, tz, tr, ts });
@@ -518,14 +705,26 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
         }
 
       } else {
-        const anchor = item.el.closest('.tech-card') || item.el.parentElement || item.el;
+        const isTechStack = group.section.id === 'tech-stack';
+        // On mobile, use the card itself (item.el) as anchor for expertise, stats, and projects so they assemble individually relative to their own position
+        const anchor = (isMobile && !isTechStack)
+          ? item.el
+          : (item.el.closest('.tech-card') || item.el.parentElement || item.el);
+
         const arect = anchor.getBoundingClientRect();
         const anchorCenter = arect.top + arect.height / 2;
         const adist = anchorCenter - viewportCenter;
 
         const isHighChaos = anchor.closest('.tech-card') !== null || anchor.closest('#stats-section') !== null;
-        const assembleZone = isHighChaos ? H * 0.15 : H * 0.35;
-        const ascatterZone = isHighChaos ? H * 0.95 : H * 0.85;
+        
+        let assembleZone = isHighChaos ? H * 0.15 : H * 0.35;
+        let ascatterZone = isHighChaos ? H * 0.95 : H * 0.85;
+
+        // Expand assembly zone on mobile to make sure elements are fully assembled while visible on screen
+        if (isMobile) {
+          assembleZone = isHighChaos ? H * 0.45 : H * 0.70;
+          ascatterZone = isHighChaos ? H * 1.10 : H * 1.30;
+        }
 
         let itemProgress: number;
         if (Math.abs(adist) <= assembleZone) {
@@ -552,7 +751,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
           });
         }
 
-        // Reset stats numbers and styles if on mobile/reset
+        // Animate stats numbers and seals on mobile/reset based on progress p
         if (isStats) {
           if (statNumEl) {
             const finalVal = i === 3 ? '∞' : (i === 0 ? '20+' : (i === 1 ? '3+' : '10+'));
@@ -561,17 +760,24 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
           item.el.style.boxShadow = '';
           
           if (sealEl) {
-            sealEl.style.opacity = '0';
-            sealEl.style.transform = 'scale(0.6)';
+            const sealOpacity = p * 0.8;
+            const sealScale = 0.6 + 0.4 * p;
+            const sealRotation = p * 180 * (i % 2 === 0 ? 1 : -1);
+
+            sealEl.style.opacity = String(sealOpacity);
+            sealEl.style.transform = `scale(${sealScale})`;
             const rClock = sealEl.querySelector<SVGElement>('.rotating-ring-clockwise');
             const rCounter = sealEl.querySelector<SVGElement>('.rotating-ring-counter');
-            if (rClock) rClock.style.transform = '';
-            if (rCounter) rCounter.style.transform = '';
+            if (rClock) {
+              rClock.style.transformOrigin = 'center';
+              rClock.style.transform = `rotate(${sealRotation}deg)`;
+            }
+            if (rCounter) {
+              rCounter.style.transformOrigin = 'center';
+              rCounter.style.transform = `rotate(${-sealRotation}deg)`;
+            }
           }
         }
-
-        const isTechStack = group.section.id === 'tech-stack';
-
         if (isTechStack && !isMobile) {
           // Supernova explosion and spring-settle formula
           const mult = (1 - p) + Math.sin(p * 2.5 * Math.PI) * (1 - p) * 1.5;
