@@ -252,6 +252,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       const isStats = id === 'stats-section';
       const isTechStack = id === 'tech-stack';
       const isExpertise = id === 'expertise';
+      const isProjects = id === 'projects';
 
       let sectionMag = mag; // mag is 160
       let sectionRotMag = rotMag; // rotMag is 60
@@ -265,6 +266,9 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       } else if (isExpertise) {
         sectionMag = 350;
         sectionRotMag = 40;
+      } else if (isProjects) {
+        sectionMag = isMobile ? 60 : 120; // Refined magnitude for clean slide-up
+        sectionRotMag = isMobile ? 8 : 12; // Refined rotation magnitude
       }
 
       section.querySelectorAll<HTMLElement>('.scatter-item').forEach((el, i) => {
@@ -277,14 +281,16 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
           distMult = 0.6 + (i % 6) * 0.35; // Wider distribution range restored
         } else if (isExpertise) {
           distMult = 0.8 + i * 0.3;
+        } else if (isProjects) {
+          distMult = 0.8 + i * 0.25; // Staggered offsets for cards
         } else {
           distMult = 0.4 + (i % 4) * 0.2;
         }
         
         const dist = sectionMag * distMult;
-        const tx = Math.cos(angle * Math.PI / 180) * dist;
-        // Vertically scatter slightly less to keep in viewport boundaries
-        const ty = Math.sin(angle * Math.PI / 180) * dist * (isStats ? 0.85 : (isTechStack ? 0.85 : (isExpertise ? 0.65 : 0.5)));
+        // Project cards slide vertically only (no horizontal skew/overlapping on desktop)
+        const tx = isProjects ? 0 : Math.cos(angle * Math.PI / 180) * dist;
+        const ty = isProjects ? dist : Math.sin(angle * Math.PI / 180) * dist * (isStats ? 0.85 : (isTechStack ? 0.85 : (isExpertise ? 0.65 : 0.5)));
         
         let tz = 0;
         if (isStats) {
@@ -293,9 +299,12 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
           tz = (i % 2 === 0 ? 1 : -1) * ((i * 37) % 180 + 30); // 3D depth variation restored
         } else if (isExpertise) {
           tz = i === 0 ? -300 : (i === 1 ? 250 : -200); // Dynamic 3D depth layers
+        } else if (isProjects) {
+          tz = -80 - i * 40; // Push back slightly in 3D perspective space
         }
 
-        const tr = (i % 2 === 0 ? 1 : -1) * ((i * 23) % sectionRotMag + 15);
+        // Slight rotation tilt:
+        const tr = isProjects ? (i % 2 === 0 ? 1 : -1) * (3 + (i % 3) * 2) : (i % 2 === 0 ? 1 : -1) * ((i * 23) % sectionRotMag + 15);
         
         let ts = 1;
         if (isStats) {
@@ -304,6 +313,8 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
           ts = 0.35 + (i % 3) * 0.35; // Start scale range restored
         } else if (isExpertise) {
           ts = 0.55; // Expertise starts smaller and zooms to natural size
+        } else if (isProjects) {
+          ts = 0.92; // Slight zoom in from 0.92 to 1.0 for premium finish
         } else {
           ts = 0.72 + (i % 3) * 0.08;
         }
@@ -526,8 +537,10 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
           itemProgress = this.easeInOut(Math.max(0, Math.min(1, t)));
         }
 
-        const stagger = Math.max(0, Math.min(1, itemProgress - (i % 8) * 0.025));
-        p = this.easeOut(stagger);
+        const isProjects = group.section.id === 'projects';
+        const staggerVal = isProjects ? (i * 0.05) : ((i % 8) * 0.025);
+        const stagger = Math.max(0, Math.min(1, itemProgress - staggerVal));
+        p = isProjects ? this.easeInOut(stagger) : this.easeOut(stagger);
 
         // Reset child transforms on other items or mobile
         if (isExpertise) {
@@ -557,8 +570,20 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
           }
         }
 
-        item.el.style.opacity = String(p);
-        item.el.style.transform = `translate3d(${item.tx * (1 - p)}px, ${item.ty * (1 - p)}px, ${item.tz * (1 - p)}px) rotate(${item.tr * (1 - p)}deg) scale(${item.ts + (1 - item.ts) * p})`;
+        const isTechStack = group.section.id === 'tech-stack';
+
+        if (isTechStack && !isMobile) {
+          // Supernova explosion and spring-settle formula
+          const mult = (1 - p) + Math.sin(p * 2.5 * Math.PI) * (1 - p) * 1.5;
+          const currentRotation = item.tr * mult * 1.8;
+          const currentScale = item.ts + (1 - item.ts) * p + Math.sin(p * Math.PI) * 0.25;
+          
+          item.el.style.opacity = String(p);
+          item.el.style.transform = `translate3d(${item.tx * mult}px, ${item.ty * mult}px, ${item.tz * mult}px) rotate(${currentRotation}deg) scale(${currentScale})`;
+        } else {
+          item.el.style.opacity = String(p);
+          item.el.style.transform = `translate3d(${item.tx * (1 - p)}px, ${item.ty * (1 - p)}px, ${item.tz * (1 - p)}px) rotate(${item.tr * (1 - p)}deg) scale(${item.ts + (1 - item.ts) * p})`;
+        }
       }
     });
   }
