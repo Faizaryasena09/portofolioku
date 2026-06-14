@@ -167,6 +167,12 @@ nav a:hover::after {
   transition: stroke-dashoffset 0.1s ease-out;
 }
 
+/* Hero layout morphing transition (dampens scroll steps smoothly) */
+#hero-photo-col, #hero-text-col {
+  will-change: transform;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
 /* Section overflow: allow scatter to show outside bounds */
 #expertise, #tech-stack, #projects, #stats-section, #kodealab-section {
   overflow: visible;

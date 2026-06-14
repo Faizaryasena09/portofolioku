@@ -144,14 +144,15 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
           heroTextCol.style.textAlign = '';
           heroTextCol.style.alignItems = '';
         } else {
-          // Desktop responsive morphing: offsets scale dynamically with viewport dimensions
-          // Horizontal offsets (at scroll=0, text is left, photo is right)
-          const tx = -Math.min(260, W * 0.22) * rev;
-          const px = Math.min(260, W * 0.22) * rev;
+          // Horizontal offsets (at scroll=0, photo is left, text is right)
+          // We shift both columns slightly to the left to optimize visual balance on wide viewports.
+          const baseOffset = Math.min(60, W * 0.04);
+          const tx = (Math.min(240, W * 0.19) - baseOffset) * rev;
+          const px = (-Math.min(290, W * 0.23) - baseOffset) * rev;
 
           // Vertical offsets to align their centers horizontally at scroll=0
-          const ty = -Math.min(120, H * 0.13) * rev;
-          const py = Math.min(160, H * 0.18) * rev;
+          const ty = -Math.min(75, H * 0.08) * rev;
+          const py = Math.min(165, H * 0.18) * rev; // Lowered photo vertical offset
 
           heroTextCol.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
           heroPhotoCol.style.transform = `translate3d(${px}px, ${py}px, 0)`;
@@ -335,6 +336,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     let progress: number = 0;
     let pinRatio: number = 0;
     const isExpertise = group.section.id === 'expertise';
+    const isStats = group.section.id === 'stats-section';
 
     if (isExpertise && !isMobile) {
       const parent = group.section.parentElement;
@@ -347,6 +349,23 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
         const assembleLimit = 0.50;
         const rawProgress = Math.min(1, pinRatio / assembleLimit);
         progress = this.easeInOut(rawProgress);
+      } else {
+        progress = 1;
+      }
+    } else if (isStats && !isMobile) {
+      const parent = group.section.parentElement;
+      if (parent && parent.id === 'stats-pin-wrapper') {
+        const parentRect = parent.getBoundingClientRect();
+        const totalPinDistance = parentRect.height - H;
+        pinRatio = totalPinDistance > 0 ? Math.max(0, Math.min(1, -parentRect.top / totalPinDistance)) : 0;
+        
+        // Stats fully assemble in Phase 1 (0 to 0.35)
+        if (pinRatio <= 0.35) {
+          const rawProgress = pinRatio / 0.35;
+          progress = this.easeInOut(rawProgress);
+        } else {
+          progress = 1;
+        }
       } else {
         progress = 1;
       }
@@ -388,11 +407,105 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     // Scatter items assembly
     group.items.forEach((item, i) => {
       let p: number;
+      const iconEl = item.el.querySelector<HTMLElement>('.w-12, .w-14');
+      const titleEl = item.el.querySelector<HTMLElement>('h3');
+      const listItems = item.el.querySelectorAll<HTMLElement>('ul > li');
+      const statNumEl = item.el.querySelector<HTMLElement>('.stat-number');
+      const sealEl = item.el.querySelector<SVGElement>('.magic-card-seal');
 
       if (isExpertise && !isMobile) {
         // Custom stagger based on the shared section progress
         const stagger = Math.max(0, Math.min(1, progress - i * 0.15));
         p = this.easeOut(stagger);
+
+        // Apply scroll-driven parallax offsets to inner elements
+        const scrollOffset = pinRatio - 0.5;
+        if (iconEl) {
+          iconEl.style.transform = `translate3d(0, ${scrollOffset * -40}px, 0)`;
+        }
+        if (titleEl) {
+          titleEl.style.transform = `translate3d(0, ${scrollOffset * -20}px, 0)`;
+        }
+        listItems.forEach((li, idx) => {
+          li.style.transform = `translate3d(0, ${scrollOffset * (-10 + idx * 8)}px, 0)`;
+          li.style.opacity = String(Math.max(0.6, 1 - Math.abs(scrollOffset) * 0.8));
+        });
+
+        item.el.style.opacity = String(p);
+        item.el.style.transform = `translate3d(${item.tx * (1 - p)}px, ${item.ty * (1 - p)}px, ${item.tz * (1 - p)}px) rotate(${item.tr * (1 - p)}deg) scale(${item.ts + (1 - item.ts) * p})`;
+
+      } else if (isStats && !isMobile) {
+        let textVal = '';
+        let sealRotation = 0;
+        let sealScale = 0.6;
+        let sealOpacity = 0;
+
+        if (pinRatio <= 0.35) {
+          textVal = this.getStatValue(i, 0);
+          p = this.easeOut(pinRatio / 0.35);
+          item.el.style.opacity = String(p);
+          item.el.style.transform = `translate3d(${item.tx * (1 - p)}px, ${item.ty * (1 - p)}px, ${item.tz * (1 - p)}px) rotate(${item.tr * (1 - p)}deg) scale(${item.ts + (1 - item.ts) * p})`;
+          item.el.style.boxShadow = '';
+
+          // Seal animation values
+          const p_seal = pinRatio / 0.35;
+          sealRotation = p_seal * 120 * (i % 2 === 0 ? 1 : -1);
+          sealScale = 0.6 + 0.4 * p_seal;
+          sealOpacity = p_seal * 0.8;
+
+        } else if (pinRatio <= 0.70) {
+          const matchRatio = (pinRatio - 0.35) / 0.35;
+          textVal = this.getStatValue(i, matchRatio);
+          
+          // Magic Match Pulse & Neon Glow
+          const scaleBump = 1 + Math.sin(matchRatio * Math.PI) * 0.08;
+          const glowSpread = Math.sin(matchRatio * Math.PI) * 45;
+          const glowColor = i === 0 ? '56,189,248' : (i === 1 ? '129,140,248' : (i === 2 ? '244,114,182' : '245,158,11'));
+          
+          item.el.style.opacity = '1';
+          item.el.style.transform = `translate3d(0, 0, 0) scale(${scaleBump})`;
+          item.el.style.boxShadow = `0 0 ${glowSpread}px rgba(${glowColor}, ${glowSpread / 90})`;
+
+          // Seal animation values
+          sealRotation = (120 + matchRatio * 240) * (i % 2 === 0 ? 1 : -1);
+          sealScale = 1.0 + Math.sin(matchRatio * Math.PI) * 0.08;
+          sealOpacity = 0.8 + Math.sin(matchRatio * Math.PI) * 0.2;
+
+        } else {
+          textVal = this.getStatValue(i, 1);
+          const p_out = (pinRatio - 0.70) / 0.30;
+          const ep = this.easeInOut(p_out);
+          
+          item.el.style.opacity = String(Math.max(0, 1 - ep));
+          item.el.style.transform = `translate3d(0, ${ep * -180}px, ${ep * 350}px) rotate(${ep * (i % 2 === 0 ? 12 : -12)}deg) scale(${1 + ep * 0.8})`;
+          item.el.style.boxShadow = '';
+
+          // Seal animation values
+          sealRotation = (360 + p_out * 180) * (i % 2 === 0 ? 1 : -1);
+          sealScale = 1.0 + p_out * 1.5;
+          sealOpacity = (1 - p_out) * 0.8;
+        }
+
+        // Apply seal styles
+        if (sealEl) {
+          sealEl.style.opacity = String(sealOpacity);
+          sealEl.style.transform = `scale(${sealScale})`;
+          const rClock = sealEl.querySelector<SVGElement>('.rotating-ring-clockwise');
+          const rCounter = sealEl.querySelector<SVGElement>('.rotating-ring-counter');
+          if (rClock) {
+            rClock.style.transformOrigin = 'center';
+            rClock.style.transform = `rotate(${sealRotation}deg)`;
+          }
+          if (rCounter) {
+            rCounter.style.transformOrigin = 'center';
+            rCounter.style.transform = `rotate(${-sealRotation}deg)`;
+          }
+        }
+
+        if (statNumEl && statNumEl.innerText !== textVal) {
+          statNumEl.innerText = textVal;
+        }
+
       } else {
         const anchor = item.el.closest('.tech-card') || item.el.parentElement || item.el;
         const arect = anchor.getBoundingClientRect();
@@ -415,11 +528,64 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
         const stagger = Math.max(0, Math.min(1, itemProgress - (i % 8) * 0.025));
         p = this.easeOut(stagger);
-      }
 
-      item.el.style.opacity = String(p);
-      item.el.style.transform = `translate3d(${item.tx * (1 - p)}px, ${item.ty * (1 - p)}px, ${item.tz * (1 - p)}px) rotate(${item.tr * (1 - p)}deg) scale(${item.ts + (1 - item.ts) * p})`;
+        // Reset child transforms on other items or mobile
+        if (isExpertise) {
+          if (iconEl) iconEl.style.transform = '';
+          if (titleEl) titleEl.style.transform = '';
+          listItems.forEach(li => {
+            li.style.transform = '';
+            li.style.opacity = '';
+          });
+        }
+
+        // Reset stats numbers and styles if on mobile/reset
+        if (isStats) {
+          if (statNumEl) {
+            const finalVal = i === 3 ? '∞' : (i === 0 ? '20+' : (i === 1 ? '3+' : '10+'));
+            statNumEl.innerText = finalVal;
+          }
+          item.el.style.boxShadow = '';
+          
+          if (sealEl) {
+            sealEl.style.opacity = '0';
+            sealEl.style.transform = 'scale(0.6)';
+            const rClock = sealEl.querySelector<SVGElement>('.rotating-ring-clockwise');
+            const rCounter = sealEl.querySelector<SVGElement>('.rotating-ring-counter');
+            if (rClock) rClock.style.transform = '';
+            if (rCounter) rCounter.style.transform = '';
+          }
+        }
+
+        item.el.style.opacity = String(p);
+        item.el.style.transform = `translate3d(${item.tx * (1 - p)}px, ${item.ty * (1 - p)}px, ${item.tz * (1 - p)}px) rotate(${item.tr * (1 - p)}deg) scale(${item.ts + (1 - item.ts) * p})`;
+      }
     });
+  }
+
+  private getStatValue(i: number, matchRatio: number): string {
+    if (matchRatio <= 0) {
+      return i === 3 ? '0' : '0+';
+    }
+    if (matchRatio >= 1) {
+      return i === 3 ? '∞' : (i === 0 ? '20+' : (i === 1 ? '3+' : '10+'));
+    }
+    
+    if (i === 0) {
+      return Math.floor(20 * matchRatio) + '+';
+    } else if (i === 1) {
+      return Math.floor(3 * matchRatio) + '+';
+    } else if (i === 2) {
+      return Math.floor(10 * matchRatio) + '+';
+    } else {
+      // Passion (index 3): count up to 99 and then morph to infinity symbol
+      if (matchRatio < 0.95) {
+        const val = Math.floor(99 * (matchRatio / 0.95));
+        return String(val);
+      } else {
+        return '∞';
+      }
+    }
   }
 
 

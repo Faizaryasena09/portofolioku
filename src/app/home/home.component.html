@@ -77,7 +77,7 @@
       <div class="max-w-5xl mx-auto w-full flex flex-col items-center justify-center relative">
         
         <!-- Photo (stays visible always) -->
-        <div id="hero-photo-col" class="flex justify-center mb-5 md:mb-10 transition-all duration-300 z-10">
+        <div id="hero-photo-col" class="flex justify-center mb-5 md:mb-10 z-10">
           <div id="hero-photo" class="relative group">
             <div class="absolute inset-0 bg-gradient-to-r from-sky-400 to-purple-600 rounded-full blur-3xl opacity-40 group-hover:opacity-70 transition duration-700"></div>
             <div class="relative w-28 h-28 sm:w-44 sm:h-44 md:w-56 md:h-56 rounded-full border-[3px] border-white/15 overflow-hidden shadow-[0_0_50px_rgba(56,189,248,0.2)] animate-float z-10 mx-auto">
@@ -97,12 +97,12 @@
         </div>
 
         <!-- Text Column: Name, Jargon & Description -->
-        <div id="hero-text-col" class="max-w-2xl w-full flex flex-col items-center justify-center transition-all duration-300 px-4 sm:px-0">
+        <div id="hero-text-col" class="max-w-2xl w-full flex flex-col items-center justify-center px-4 sm:px-0">
           <div id="hero-name" class="w-full">
-            <h1 class="text-3xl sm:text-5xl md:text-7xl font-extrabold tracking-tight leading-tight text-white drop-shadow-2xl mb-2 md:mb-3">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight leading-tight text-white drop-shadow-2xl mb-2 md:mb-3 md:whitespace-nowrap">
               Faiz Resta Aryasena
             </h1>
-            <p id="hero-role" class="text-xs sm:text-xl md:text-2xl font-semibold bg-gradient-to-r from-sky-400 via-purple-400 to-pink-400 bg-clip-text text-transparent tracking-widest uppercase mb-4 md:mb-6">
+            <p id="hero-role" class="text-xs sm:text-sm md:text-lg lg:text-xl xl:text-2xl font-semibold bg-gradient-to-r from-sky-400 via-purple-400 to-pink-400 bg-clip-text text-transparent tracking-widest uppercase mb-4 md:mb-6">
               Creative Developer &amp; Designer
             </p>
           </div>
@@ -257,30 +257,75 @@
     </section>
   </div>
 
-  <!-- Stats Counter Section -->
-  <section id="stats-section" class="py-20 px-6 relative z-20" style="overflow:visible">
-    <div class="absolute inset-0 bg-gradient-to-r from-sky-500/5 via-purple-500/5 to-pink-500/5 pointer-events-none"></div>
-    <div class="max-w-5xl mx-auto">
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
-        <div class="scatter-item">
-          <div class="stat-number">20+</div>
-          <div class="text-gray-400 text-sm font-light mt-2 tracking-wider uppercase">Projects</div>
-        </div>
-        <div class="scatter-item">
-          <div class="stat-number">3+</div>
-          <div class="text-gray-400 text-sm font-light mt-2 tracking-wider uppercase">Years Exp</div>
-        </div>
-        <div class="scatter-item">
-          <div class="stat-number">10+</div>
-          <div class="text-gray-400 text-sm font-light mt-2 tracking-wider uppercase">Tech Stacks</div>
-        </div>
-        <div class="scatter-item">
-          <div class="stat-number">∞</div>
-          <div class="text-gray-400 text-sm font-light mt-2 tracking-wider uppercase">Passion</div>
+  <!-- Stats Pin/Sticky Wrapper -->
+  <div id="stats-pin-wrapper" class="relative z-20 h-auto md:h-[350vh] overflow-visible">
+    <!-- Stats Counter Section -->
+    <section id="stats-section" class="relative md:sticky top-0 min-h-screen md:h-screen flex flex-col justify-center py-20 px-6 z-20" style="overflow:visible">
+      <div class="absolute inset-0 bg-gradient-to-r from-sky-500/5 via-purple-500/5 to-pink-500/5 pointer-events-none"></div>
+      
+      <div class="max-w-5xl mx-auto w-full relative">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 text-center relative z-10">
+          
+          <!-- Projects Stat Card -->
+          <div class="scatter-item group glow-border bg-slate-900/40 backdrop-blur-md rounded-3xl p-6 md:p-8 border border-white/5 shadow-2xl relative overflow-hidden flex flex-col items-center justify-center min-h-[200px]">
+            <!-- Magic Seal Background -->
+            <svg class="absolute inset-0 w-full h-full pointer-events-none z-0 magic-card-seal" xmlns="http://www.w3.org/2000/svg" style="transform: scale(0.6); opacity: 0; transition: transform 0.05s ease-out, opacity 0.05s ease-out;">
+              <circle cx="50%" cy="50%" r="90" stroke="currentColor" stroke-dasharray="8,8" stroke-width="1" fill="none" class="text-sky-500/20" />
+              <circle cx="50%" cy="50%" r="75" stroke="currentColor" stroke-dasharray="140,80" stroke-width="1.5" fill="none" class="text-sky-500/35 rotating-ring-clockwise" />
+              <circle cx="50%" cy="50%" r="60" stroke="currentColor" stroke-dasharray="40,20" stroke-width="1" fill="none" class="text-sky-500/15 rotating-ring-counter" />
+            </svg>
+            <div class="relative z-10 flex flex-col items-center justify-center">
+              <div class="stat-number">20+</div>
+              <div class="text-gray-400 text-xs sm:text-sm font-light mt-2 tracking-wider uppercase">Projects</div>
+            </div>
+          </div>
+
+          <!-- Years Exp Stat Card -->
+          <div class="scatter-item group glow-border bg-slate-900/40 backdrop-blur-md rounded-3xl p-6 md:p-8 border border-white/5 shadow-2xl relative overflow-hidden flex flex-col items-center justify-center min-h-[200px]">
+            <!-- Magic Seal Background -->
+            <svg class="absolute inset-0 w-full h-full pointer-events-none z-0 magic-card-seal" xmlns="http://www.w3.org/2000/svg" style="transform: scale(0.6); opacity: 0; transition: transform 0.05s ease-out, opacity 0.05s ease-out;">
+              <circle cx="50%" cy="50%" r="90" stroke="currentColor" stroke-dasharray="8,8" stroke-width="1" fill="none" class="text-indigo-500/20" />
+              <circle cx="50%" cy="50%" r="75" stroke="currentColor" stroke-dasharray="140,80" stroke-width="1.5" fill="none" class="text-indigo-500/35 rotating-ring-clockwise" />
+              <circle cx="50%" cy="50%" r="60" stroke="currentColor" stroke-dasharray="40,20" stroke-width="1" fill="none" class="text-indigo-500/15 rotating-ring-counter" />
+            </svg>
+            <div class="relative z-10 flex flex-col items-center justify-center">
+              <div class="stat-number">3+</div>
+              <div class="text-gray-400 text-xs sm:text-sm font-light mt-2 tracking-wider uppercase">Years Exp</div>
+            </div>
+          </div>
+
+          <!-- Tech Stacks Stat Card -->
+          <div class="scatter-item group glow-border bg-slate-900/40 backdrop-blur-md rounded-3xl p-6 md:p-8 border border-white/5 shadow-2xl relative overflow-hidden flex flex-col items-center justify-center min-h-[200px]">
+            <!-- Magic Seal Background -->
+            <svg class="absolute inset-0 w-full h-full pointer-events-none z-0 magic-card-seal" xmlns="http://www.w3.org/2000/svg" style="transform: scale(0.6); opacity: 0; transition: transform 0.05s ease-out, opacity 0.05s ease-out;">
+              <circle cx="50%" cy="50%" r="90" stroke="currentColor" stroke-dasharray="8,8" stroke-width="1" fill="none" class="text-pink-500/20" />
+              <circle cx="50%" cy="50%" r="75" stroke="currentColor" stroke-dasharray="140,80" stroke-width="1.5" fill="none" class="text-pink-500/35 rotating-ring-clockwise" />
+              <circle cx="50%" cy="50%" r="60" stroke="currentColor" stroke-dasharray="40,20" stroke-width="1" fill="none" class="text-pink-500/15 rotating-ring-counter" />
+            </svg>
+            <div class="relative z-10 flex flex-col items-center justify-center">
+              <div class="stat-number">10+</div>
+              <div class="text-gray-400 text-xs sm:text-sm font-light mt-2 tracking-wider uppercase">Tech Stacks</div>
+            </div>
+          </div>
+
+          <!-- Passion Stat Card -->
+          <div class="scatter-item group glow-border bg-slate-900/40 backdrop-blur-md rounded-3xl p-6 md:p-8 border border-white/5 shadow-2xl relative overflow-hidden flex flex-col items-center justify-center min-h-[200px]">
+            <!-- Magic Seal Background -->
+            <svg class="absolute inset-0 w-full h-full pointer-events-none z-0 magic-card-seal" xmlns="http://www.w3.org/2000/svg" style="transform: scale(0.6); opacity: 0; transition: transform 0.05s ease-out, opacity 0.05s ease-out;">
+              <circle cx="50%" cy="50%" r="90" stroke="currentColor" stroke-dasharray="8,8" stroke-width="1" fill="none" class="text-amber-500/20" />
+              <circle cx="50%" cy="50%" r="75" stroke="currentColor" stroke-dasharray="140,80" stroke-width="1.5" fill="none" class="text-amber-500/35 rotating-ring-clockwise" />
+              <circle cx="50%" cy="50%" r="60" stroke="currentColor" stroke-dasharray="40,20" stroke-width="1" fill="none" class="text-amber-500/15 rotating-ring-counter" />
+            </svg>
+            <div class="relative z-10 flex flex-col items-center justify-center">
+              <div class="stat-number">∞</div>
+              <div class="text-gray-400 text-xs sm:text-sm font-light mt-2 tracking-wider uppercase">Passion</div>
+            </div>
+          </div>
+
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </div>
 
 
   <!-- Marquee Strip 2 (reverse) -->
